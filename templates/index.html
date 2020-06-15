@@ -1,0 +1,62 @@
+<!--
+  Recud, AI for sound
+  Created by Tochi Bedford & Abdulmalik Bawa on 06/12/2020
+  Copyright © 2020 Tochi Bedford. All rights reserved.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href={{ url_for('static', filename='style.css') }}>
+    <title>Recud, AI for Audio|Prototype</title>
+</head>
+<body>
+    
+    <div class="container">
+        
+        <div class="left container-item"></div>
+        <div class="app container-item">
+            <div class="recudText flex-item">
+                RECUD
+            </div>
+            <div class="divider flex-item" id="recudTitle"></div>
+            <div class="instruct flex-item">
+                Hi there, hit the "REC" button to get started
+            </div>
+            <div class="audioSpecView flex-item">
+                <div class="top container-item"></div>
+                <div class="aud container-item">
+                    <canvas class="visualizer" height="100%" width="100%"></canvas>
+                </div>
+                <div class="bott container-item"></div>
+            </div>
+            <div class="predictionsInfo flex-item">
+                
+            </div>
+            <div class="wrongPrediction flex-item">
+
+            </div>
+            <div class="divider flex-item"></div>
+            <div class="recButton flex-item">
+                <div class="buttonRec">
+                    <div class="top container-item"></div>
+                    <div class="textRec container-item">REC</div>
+                    <div class="bott container-item"></div>
+                </div>
+            </div>
+            <div class="bottomPage flex-item">
+                <div class="top container-item"></div>
+                <div class="MBT container-item">made by tochi © 2020</div>
+                <div class="bott container-item"></div>
+            </div>
+        </div>
+        <div class="right container-item"></div>
+    </div>
+    <script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+    <script src={{ url_for("static", filename="index.js") }}></script>
+    
+</body>
+</html>

@@ -17,7 +17,7 @@ const canvasCtx = canvas.getContext("2d");
 // }, 5000);
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    var timee = 9;
+    var timee = 9
     console.log('getUserMedia supported.');
     const constraints = { audio: true };
     let chunks = [];
@@ -25,36 +25,41 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const mediaRecorder = new MediaRecorder(stream);
     
         visualize(stream);
-    
+        var timeee;
+        var timeOut;
         record.onclick = function() {
-            if (recording === false){
-                
+            if (recording == false){
+                recording = true
                 mediaRecorder.start();
                 console.log(mediaRecorder.state);
                 // console.log("recorder started");
                 record.style.background = "rgb(97, 13, 30)";
-                var timeOut = setTimeout(function(){
-                    recording = false
-                    mediaRecorder.stop()
-                    textRec.textContent = "REC";
-                    record.style.background = "#B33951";
-                    timee = 9;
-                    clearInterval(timeee)
-                }, 10000)
-                var timeee = setInterval(function(){
+                timeee = setInterval(function(){
                     textRec.textContent = "STOP: " + timee.toString(10)
                     console.log(timee)
                     timee -= 1
                 }, 1000)
+                timeOut = setTimeout(function(){
+                    recording = false
+                    mediaRecorder.stop()
+                    textRec.textContent = "REC";
+                    record.style.background = "#B33951";
+                    clearInterval(timeee)
+                    timee = 9;
+                }, 10000)
+                
                 
                 recording = true;
             
-            }else{
-                recording = false
+            }else if(recording == true){
+                clearInterval(timeee);
+                clearInterval(timeOut);
                 mediaRecorder.stop();
                 // console.log(mediaRecorder.state);
                 textRec.textContent = "REC";
                 record.style.background = "#B33951";
+                timee = 9;
+                recording = false
                 
                 // console.log("recorder stopped");
 
@@ -75,15 +80,34 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             console.log("recorder stopped");
             var filename = new Date().toISOString();
             var xhr = new XMLHttpRequest();
+            // xhr.overrideMimeType('application/json');
             xhr.onload = function(e) {
                 if (this.readyState === 4) {
                     console.log("Server returned: ", e.target.responseText);
+                    var resp = JSON.parse(e.target.responseText)
+                    if(document.querySelector(".listLeft")){
+                        var liLeft = document.querySelector(".listLeft")
+                        var liRight = document.querySelector(".listRight")
+                        liLeft.textContent = resp["sure"]
+                        liRight.textContent = resp["unsure"]
+                    }else{
+                        var mainList = document.querySelector(".mainList")
+                        var liLeft = document.createElement("LI")
+                        var liRight = document.createElement("LI")
+                        liLeft.className = "listLeft"
+                        liRight.className = "listRight"
+                        liLeft.textContent = resp["sure"]
+                        liRight.textContent = resp["unsure"]
+                        mainList.appendChild(liLeft)
+                        mainList.appendChild(liRight)
+                    }
                 }
             };
             var fd = new FormData();
             fd.append("audio_data", blob, filename);
             xhr.open("POST", "/", true);
             xhr.send(fd);
+            
           }
       
           mediaRecorder.ondataavailable = function(e) {

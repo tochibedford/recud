@@ -1,6 +1,6 @@
 <!--
   Recud, AI for sound
-  Created by Tochi Bedford & Abdulmalik Bawa on 06/12/2020
+  Created by Tochi Bedford 
   Copyright © 2020 Tochi Bedford. All rights reserved.
 -->
 <!DOCTYPE html>
@@ -24,7 +24,7 @@
             </div>
             <div class="divider flex-item" id="recudTitle"></div>
             <div class="instruct flex-item">
-                Hi there, hit the "REC" button to get started
+                Hi there, hit the "REC" button to get started. Also <h1></h1><a href="https://pastebin.com/87gtxAt2" target="_blank">click here</a></h1> to see the list of predictable sounds
             </div>
             <div class="audioSpecView flex-item">
                 <div class="top container-item"></div>
@@ -34,10 +34,11 @@
                 <div class="bott container-item"></div>
             </div>
             <div class="predictionsInfo flex-item">
-                
+                    <ul class="mainList">
+                    </ul>
             </div>
             <div class="wrongPrediction flex-item">
-
+                <div class="textWrong"></br>Wrong Prediction? hit "REC" again</div>
             </div>
             <div class="divider flex-item"></div>
             <div class="recButton flex-item">
@@ -55,7 +56,7 @@
         </div>
         <div class="right container-item"></div>
     </div>
-    <script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script>
+    <!-- <script src="https://unpkg.com/meyda/dist/web/meyda.min.js"></script> -->
     <script src={{ url_for("static", filename="index.js") }}></script>
     
 </body>

@@ -2,7 +2,7 @@ gunicorn==19.9.0
 Flask==1.1.2
 Werkzeug==0.16.0
 numba==0.48.0
-PySoundFile==0.9.0.post1
+SoundFile==0.10.3.post1
 librosa>=0.7.2
 tensorflow==2.0.0
 numpy==1.17.4

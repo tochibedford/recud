@@ -90,7 +90,8 @@ def index():
                 
                 X = loadTransform(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 X_img = convertToSpec(X)
-                session["data"]["predictions"] = model.predict(X_img)
+                session["data"]["predictions"] = app.config['model'].predict(X_img)
+                print(app.config['model'])
                 session["data"]["predictions"] = predictionConvert(session["data"]["predictions"])
                 session["data"]["success"] = True   
         return json.dumps(session["data"]["predictions"])
@@ -99,8 +100,8 @@ def index():
 
 if __name__ == "__main__":
     try:
-        model = load_modela(app.config["models"], version=2)
+        app.config['model'] = load_modela(app.config["models"], version=2)
     except:
         print("Unexpected error:", sys.exc_info()[0])
-        model = load_modela(app.config["models"], latest=True)
+        app.config['model'] = load_modela(app.config["models"], latest=True)
     app.run(host="0.0.0.0")

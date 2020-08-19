@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+libasound2-dev
+python-setuptools
+=======
+libasound2-dev
+python-setuptools
+>>>>>>> f78757b6447cfa6fe96fd8917ce7a4d64a1f906a
+libsndfile-dev

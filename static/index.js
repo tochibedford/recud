@@ -1,129 +1,194 @@
-const record = document.querySelector('.buttonRec');
-// const soundClips = document.querySelector('.sound-clips');
+const record = document.querySelector('.recButton');
 const canvas = document.querySelector('.visualizer');
 const mainSection = document.querySelector('.app');
 var recording = false;
-const textRec = document.querySelector('.textRec');
 
 let audioCtx;
 const canvasCtx = canvas.getContext("2d");
 
-// var flashInt = setInterval(() => {
-//     if (flashes){
-//         setTimeout(() => {
-//             flashes.style.display = "false";
-//         }, 5000);
-//     }
-// }, 5000);
+//check for IOS
+function isIos() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
 
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    var timee = 9
-    console.log('getUserMedia supported.');
-    const constraints = { audio: true };
-    let chunks = [];
-    let onSuccess = function(stream) {
-        const mediaRecorder = new MediaRecorder(stream);
+starter = document.querySelector(".instruct");
+
+setTimeout(()=>{
+    posTop = starter.scrollIntoView({behavior: "smooth", block: "start"});
+
+}, 2000)
     
-        visualize(stream);
-        var timeee;
-        var timeOut;
-        record.onclick = function() {
-            if (recording == false){
-                recording = true
-                mediaRecorder.start();
-                console.log(mediaRecorder.state);
-                // console.log("recorder started");
-                record.style.background = "rgb(97, 13, 30)";
-                timeee = setInterval(function(){
-                    textRec.textContent = "STOP: " + timee.toString(10)
+
+if(!isIos()){
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia ){
+        var timee = 10;
+        console.log('getUserMedia supported.');
+        const constraints = { audio: true };
+        let chunks = [];
+        let onSuccess = function(stream) {
+            const mediaRecorder = new MediaRecorder(stream);
+            visualize(stream);
+            var timeee;
+            var timeOut;
+            record.onclick = ()=>{
+                if (recording == false){
+                    recording = true
+                    mediaRecorder.start();
+                    console.log(mediaRecorder.state);
+                    // console.log("recorder started");
+                    record.style.background = "var(--success)";
+                    record.textContent = "STOP: " + timee.toString(10)
                     console.log(timee)
                     timee -= 1
-                }, 1000)
-                timeOut = setTimeout(function(){
-                    recording = false
-                    mediaRecorder.stop()
-                    textRec.textContent = "REC";
+                    timeee = setInterval(function(){
+                        record.textContent = "STOP: " + timee.toString(10)
+                        console.log(timee)
+                        timee -= 1
+                    }, 1000)
+                    timeOut = setTimeout(function(){
+                        recording = false
+                        mediaRecorder.stop();
+                        record.textContent = "REC";
+                        record.style.background = "var(--secondary)";
+                        clearInterval(timeee)
+                        timee = 10;
+                    }, 10000)
+                    recording = true
+                
+                }else if(recording == true){
+                    clearInterval(timeee);
+                    clearTimeout(timeOut);
+                    mediaRecorder.stop();
+                    record.textContent = "REC";
                     record.style.background = "#B33951";
-                    clearInterval(timeee)
-                    timee = 9;
-                }, 10000)
-                
-                
-                recording = true;
-            
-            }else if(recording == true){
-                clearInterval(timeee);
-                clearInterval(timeOut);
-                mediaRecorder.stop();
-                // console.log(mediaRecorder.state);
-                textRec.textContent = "REC";
-                record.style.background = "#B33951";
-                timee = 9;
-                recording = false
-                
-                // console.log("recorder stopped");
+                    timee = 10;
+                    recording = false
 
+                }
+            
+            }
+            mediaRecorder.onstop = function(e) {
+                const blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=opus' });
+                chunks = [];
+                const audioURL = window.URL.createObjectURL(blob);
+                console.log("recorder stopped");
+                var filename = new Date().toISOString();
+                var xhr = new XMLHttpRequest();
+                // xhr.overrideMimeType('application/json');
+                xhr.onload = function(e) {
+                    if (this.readyState === 4) {
+                        console.log("Server returned: ", e.target.responseText);
+                        var resp = JSON.parse(e.target.responseText)
+                        var liLeft = document.querySelectorAll(".card-title")[0]
+                        var liRight = document.querySelectorAll(".card-title")[1]
+                        liLeft.childNodes[0].textContent = resp["unsure"]
+                        liRight.childNodes[0].textContent = resp["sure"]
+                        liLeft.classList.remove("thirdFade");
+                        liRight.classList.remove("thirdFade");
+                        liLeft.classList.add("thirdFade");
+                        liRight.classList.add("thirdFade");
+
+                    }
+                };
+                var fd = new FormData();
+                fd.append("audio_data", blob, filename);
+                xhr.open("POST", "/", true);
+                xhr.send(fd);   
+              }  
+            mediaRecorder.ondataavailable = function(e) {
+                chunks.push(e.data);   
             }
         }
-
-        mediaRecorder.onstop = function(e) {
-            // console.log("data available after MediaRecorder.stop() called.");
-
-            // audio.setAttribute('controls', '');
-      
-            // audio.controls = true;
-            const blob = new Blob(chunks, { 'type' : 'audio/ogg; codecs=opus' });
-            chunks = [];
-            const audioURL = window.URL.createObjectURL(blob);
-            // audio.src = audioURL;
-            // console.log(chunks)
-            console.log("recorder stopped");
+          
+        let onError = function(err) {
+            alert('The following error occured: ' + err + "\n Please allow access to your microphone");
+        }
+          
+        navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+    } else {
+        alert('getUserMedia not supported on your browser! No worries, switching to your devices native recorder');
+        var audioIn = document.createElement("input");
+        audioIn.type="file"
+        audioIn.accept = "audio/*";
+        audioIn.capture= true;
+        audioIn.id = "#recorderIn";
+        
+        audioIn.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const url = URL.createObjectURL(file);
+            // Do something with the audio file.
             var filename = new Date().toISOString();
             var xhr = new XMLHttpRequest();
-            // xhr.overrideMimeType('application/json');
             xhr.onload = function(e) {
                 if (this.readyState === 4) {
                     console.log("Server returned: ", e.target.responseText);
                     var resp = JSON.parse(e.target.responseText)
-                    if(document.querySelector(".listLeft")){
-                        var liLeft = document.querySelector(".listLeft")
-                        var liRight = document.querySelector(".listRight")
-                        liLeft.textContent = resp["sure"]
-                        liRight.textContent = resp["unsure"]
-                    }else{
-                        var mainList = document.querySelector(".mainList")
-                        var liLeft = document.createElement("LI")
-                        var liRight = document.createElement("LI")
-                        liLeft.className = "listLeft"
-                        liRight.className = "listRight"
-                        liLeft.textContent = resp["sure"]
-                        liRight.textContent = resp["unsure"]
-                        mainList.appendChild(liLeft)
-                        mainList.appendChild(liRight)
-                    }
+                    var liLeft = document.querySelectorAll(".card-title")[0]
+                    var liRight = document.querySelectorAll(".card-title")[1]
+                    liLeft.childNodes[0].textContent = resp["unsure"]
+                    liRight.childNodes[0].textContent = resp["sure"]
+                    liLeft.classList.remove("thirdFade");
+                    liRight.classList.remove("thirdFade");
+                    liLeft.classList.add("thirdFade");
+                    liRight.classList.add("thirdFade");
+                    
                 }
             };
             var fd = new FormData();
-            fd.append("audio_data", blob, filename);
+            fd.append("audio_data", file, filename);
             xhr.open("POST", "/", true);
             xhr.send(fd);
-            
-          }
-      
-          mediaRecorder.ondataavailable = function(e) {
-            chunks.push(e.data);
-            
-          }
+        });
+        record.addEventListener("click", (e)=>{
+            audioIn.click();
+        })
     }
-      
-        let onError = function(err) {
-          console.log('The following error occured: ' + err);
-        }
-      
-        navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
-    } else {
-        console.log('getUserMedia not supported on your browser!');
-    }
+}else{
+    var audioIn = document.createElement("input");
+    audioIn.type="file"
+    audioIn.accept = "audio/*";
+    audioIn.capture= true;
+    audioIn.id = "#recorderIn";
+    
+    audioIn.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const url = URL.createObjectURL(file);
+        // Do something with the audio file.
+        var filename = new Date().toISOString();
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e) {
+            if (this.readyState === 4) {
+                console.log("Server returned: ", e.target.responseText);
+                var resp = JSON.parse(e.target.responseText)
+                var liLeft = document.querySelectorAll(".card-title")[0]
+                var liRight = document.querySelectorAll(".card-title")[1]
+                liLeft.childNodes[0].textContent = resp["unsure"]
+                liRight.childNodes[0].textContent = resp["sure"]
+                liLeft.classList.remove("thirdFade");
+                liRight.classList.remove("thirdFade");
+                liLeft.classList.add("thirdFade");
+                liRight.classList.add("thirdFade");
+                
+            }
+        };
+        var fd = new FormData();
+        fd.append("audio_data", file, filename);
+        xhr.open("POST", "/", true);
+        xhr.send(fd);
+    });
+    record.addEventListener("click", (e)=>{
+        audioIn.click();
+    })
+}
 
 function visualize(stream) {
 if(!audioCtx) {
@@ -141,6 +206,9 @@ source.connect(analyser);
 //analyser.connect(audioCtx.destination);
 
 draw()
+setInterval(()=>{
+    canvasCtx.clearRect(0,0,canvas.width, canvas.height);
+}, 25)
 
 function draw() {
     const WIDTH = canvas.width
@@ -149,9 +217,8 @@ function draw() {
     requestAnimationFrame(draw);
 
     analyser.getByteTimeDomainData(dataArray);
-
-    canvasCtx.fillStyle = '#E3D081';
-    canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+    // canvasCtx.fillStyle = "#80A1C100";
+    // canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
     canvasCtx.lineWidth = 3;
     canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
@@ -178,6 +245,8 @@ function draw() {
 
     canvasCtx.lineTo(canvas.width, canvas.height/2);
     canvasCtx.stroke();
+
+
 
 }
 }

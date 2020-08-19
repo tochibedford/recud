@@ -1,0 +1,202 @@
+/*theme colors generated off coolors*/
+:root{
+	--primary: #80A1C1;
+	--primary-shade: #7698BC;
+	--primary-bright: #D9CFC1;
+	
+	--secondary: #BA3F1D;
+
+	--tertiary: #A77E58;
+	--tertiary-bright:#EEE3AB;
+	--tertiary-shade: #6A2411;
+}
+
+@-webkit-keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 10%, 0);
+        transform: translate3d(0, 10%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 10%, 0);
+        transform: translate3d(0, 10%, 0);
+    }
+    100% {
+        opacity: 1;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+.fa-hand-pointer{
+	color: black;
+	transform: rotateZ(-90deg);
+}
+
+.fadeInUp {
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+    -webkit-animation-duration: 0.7s;
+    animation-duration: 0.7s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.secondFade {
+	-webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+}
+
+.thirdFade {
+	-webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+    -webkit-animation-duration: 2.5s;
+    animation-duration: 2.5s;
+}
+
+.fourthFade {
+	-webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+    -webkit-animation-duration: 2s;
+    animation-duration: 2s;
+}
+
+/*
+Click here Text
+*/
+.clickHere{
+    color: white;
+    font-weight: 700;
+    font-size: 0.8em;
+    transition: background-size 8s;
+    transition: color 1s, font-size 0.5s;
+    transition-timing-function: cubic-bezier(0.1, 0.7, 0.8, 1)
+}
+
+.clickHere:hover{
+    font-size: 0.9em;
+    color: white;
+    text-transform: uppercase;
+    border-style: dotted;
+    border-radius: 10px;
+    border-width: 2px;
+    text-decoration: none;
+}
+
+
+/*
+Canvas Work
+*/
+.audioSpecView{
+	margin-left: 10%; 
+	width: 80%;
+	border-radius: 20px 20px 0px 0px;
+	overflow: hidden;
+}
+canvas{
+	width: 100%;
+}
+
+
+/*
+Predictions Info
+*/
+
+.predictionsInfo{
+	margin-left: 10%; 
+	width: 80%;
+	border-radius: 20px 20px 20px 20px;
+	height: 130px;
+	/*overflow: hidden;*/
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-top: 2px;
+}
+
+
+/*
+ Prediction Cards;
+*/
+.mainList{
+	width: 100%;
+	padding: 0;
+
+}
+.listLeft, .listRight{
+	list-style: none;
+	border-radius: 20px 20px 0px 0px;
+	background-size: 100% 100%;
+	background-position: bottom right;
+	height: 70px;
+	margin-bottom: 0.2em;
+	/*font-size: 2em;*/
+}
+
+.listRight{
+	/*font-size: 1em;*/
+	border-radius: 0px 0px 20px 20px;
+	height: 50px;
+}
+
+.card{
+	background-image: linear-gradient(135deg, #A77E5811, #A77E5811);
+	background-color: #00000000;
+}
+.card-body{
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/*
+Record Button
+*/
+
+.recButton{
+	align-items: center;
+	height: 70px;
+	width: 70px;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+ 	align-items: center;
+ 	background-color: var(--secondary);
+ 	cursor: pointer;
+ 	transition: transform 0.4s;
+}
+
+.recButton:hover{
+	transform: scale(1.2,1.2);
+}
+
+/*
+instruct
+*/
+
+.instruct{
+	border-radius: 0px 0px 20px 20px;
+	width: 75%;
+	margin-left: 12.5%;
+	padding-top: 7px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+  .instruct{
+    width: 90%;
+	margin-left: 5%;
+  }
+}

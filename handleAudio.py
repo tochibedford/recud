@@ -7,8 +7,8 @@ from librosa.feature import melspectrogram
 
 def convertFile(audioChunk):
     newFile = audioChunk[:-4]+".wav"
-    arger = "ffmpeg/bin/ffmpeg.exe -hide_banner -loglevel panic"
-    args = ["ffmpeg/bin/ffmpeg.exe", "-i", audioChunk, newFile]
+    arger = "ffmpeg -hide_banner -loglevel panic"
+    args = ["ffmpeg", "-i", audioChunk, newFile]
     subprocess.call(arger.split(" "))
     subprocess.call(args)
     os.remove(audioChunk)

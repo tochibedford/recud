@@ -6,10 +6,10 @@ from flask import Flask, flash, render_template, redirect, request, session, url
 from werkzeug.utils import secure_filename
 from handleAudio import convertFile, loadTransform, convertToSpec
 
-model = None
 
 app = Flask(__name__)
-#df
+
+
 
 app.secret_key = "980dbb6131eaacb9072fefffb2946a0a3864fb57df75c13d"
 UPLOAD_FOLDER = './uploads'
@@ -26,12 +26,22 @@ def load_modela(dirr, version=None, latest=True):
     versions.sort()
     if latest:
         modelLoad = os.path.join(dirr, versions[-1], os.listdir(os.path.join(dirr, versions[-1]))[-1])
+        print(modelLoad)
         mod = load_model(modelLoad)
         return mod
     else:
         modelLoad = os.path.join(dirr, versions[version-1], os.listdir(os.path.join(dirr, versions[version-1]))[-1])
+        print(modelLoad)
         mod = load_model(modelLoad)
         return mod
+        
+# try:
+#     model = load_modela(app.config["models"], version=2)
+# except:
+#     print("Unexpected error:", sys.exc_info()[0])
+#     model = load_modela(app.config["models"], latest=True)
+model = None;
+
 
 def predictionConvert(predictions, top=3):
     #getting top "top" prediction
@@ -43,13 +53,6 @@ def predictionConvert(predictions, top=3):
         for j in range(top):
             preds[idx].append(int(np.argmax(i)))
             i[np.argmax(i)] = 0
-            # i = np.delete(i, np.argmax(i), 0)
-    # for idx, i in enumerate(predictions):
-    #     preds.append([])
-    #     for j in range(top):
-    #         preds[idx].append(int(np.argmax(i)))
-    #         i = np.delete(i, np.argmax(i), 0)
-    #getting the most frequent predictions from the top predictions
     preds = np.array(preds)
     preds = preds.reshape(preds.shape[0]*preds.shape[1])
     modal = stats.mode(preds)[0][0]
@@ -100,4 +103,4 @@ if __name__ == "__main__":
     except:
         print("Unexpected error:", sys.exc_info()[0])
         model = load_modela(app.config["models"], latest=True)
-    app.run(debug=True)
+    app.run(host="0.0.0.0")

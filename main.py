@@ -35,11 +35,11 @@ def load_modela(dirr, version=None, latest=True):
         mod = load_model(modelLoad)
         return mod
         
-# try:
-#     model = load_modela(app.config["models"], version=2)
-# except:
-#     print("Unexpected error:", sys.exc_info()[0])
-#     model = load_modela(app.config["models"], latest=True)
+try:
+    app.config['model'] = load_modela(app.config["models"], version=2)
+except:
+    print("Unexpected error:", sys.exc_info()[0])
+    app.config['model'] = load_modela(app.config["models"], latest=True)
 model = None;
 
 

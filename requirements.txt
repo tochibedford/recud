@@ -5,5 +5,5 @@ numba==0.48.0
 SoundFile==0.10.3.post1
 librosa>=0.7.2
 tensorflow==2.0.0
-numpy==1.17.4
+numpy==1.22.0
 scipy==1.4.0

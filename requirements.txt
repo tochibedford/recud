@@ -4,6 +4,6 @@ Werkzeug==0.16.0
 numba==0.48.0
 SoundFile==0.10.3.post1
 librosa>=0.7.2
-tensorflow==2.0.0
+tensorflow==2.9.3
 numpy==1.17.4
 scipy==1.4.0

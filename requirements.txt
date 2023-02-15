@@ -1,6 +1,6 @@
 gunicorn==19.9.0
 Flask==1.1.2
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 numba==0.48.0
 SoundFile==0.10.3.post1
 librosa>=0.7.2
